@@ -1,65 +1,22 @@
 {
-  "actorSpecification": 1,
-  "name": "AI Website Qualifying Agent",
-  "title": "AI Website Qualifying Agent",
-  "description": "AI-powered B2B SaaS lead qualification agent. Takes a list of URLs, scrapes each website, and uses AI to analyze if the company matches your Ideal Customer Profile (ICP) for cold outreach agencies.",
+  "name": "ai-website-qualifying-agent",
   "version": "1.0.0",
-  "meta": {
-    "avatarUrl": "https://apify.com/favicon.ico",
-    "categories": ["LEAD_GENERATION", "MARKETING", "SALES"]
-  },
+  "description": "AI-powered B2B SaaS lead qualification agent",
   "input": {
-    "type": "object",
-    "title": "Input",
-    "description": "Configuration for the website qualifying agent",
-    "properties": {
-      "urls": {
-        "type": "array",
-        "title": "URLs to qualify",
-        "description": "Array of website URLs to analyze",
-        "items": {
-          "type": "string"
-        },
-        "minItems": 1
+    "urls": {
+      "type": "array",
+      "title": "URLs to qualify",
+      "description": "Array of website URLs to analyze",
+      "items": {
+        "type": "string"
       },
-      "openrouterApiKey": {
-        "type": "string",
-        "title": "OpenRouter API Key",
-        "description": "Your OpenRouter API key for AI analysis. Get one free at https://openrouter.ai/settings/keys",
-        "isSecret": true,
-        "editor": "textField"
-      },
-      "icpSystemPrompt": {
-        "type": "string",
-        "title": "ICP System Prompt",
-        "description": "The system prompt that defines your Ideal Customer Profile. Modify this to change qualification criteria.",
-        "editor": "textArea",
-        "default": "You are a B2B SaaS lead qualification agent for a cold outreach agency.\n\n## YOUR JOB\nYou receive one website URL per run. Scrape the website content, then decide if this company is a qualified prospect.\n\n## QUALIFIED PROSPECT DEFINITION\nA company qualifies if it operates in ONE OR MORE of these categories:\n- Cold email software (sending infrastructure, deliverability, warmup)\n- Cold LinkedIn outreach tools\n- Lead generation data / prospecting databases\n- Sales engagement platforms\n- Email finding / contact enrichment\n- AI-powered outreach automation\n- Inbox / reply management for outreach\n- Lead qualification or scoring tools\n\nReference companies to calibrate your judgment: Smartlead, Instantly, Clay, Prospeo, Heyreach, Apollo, Lemlist, La Growth Machine, Hunter.io, Dropcontact, Snov.io, Expandi, Waalaxy.\n\n## DISQUALIFY IF\n- B2C product (sells to individuals, not businesses)\n- Marketing automation for paid ads (Google Ads, Meta Ads — NOT outreach)\n- CRM software with no outreach component (pure pipeline management)\n- Content marketing / SEO tools\n- Social media scheduling tools\n- HR, finance, legal, or operations SaaS\n- The product is in stealth / no clear product description found\n\n## SCORING RUBRIC (1-10)\nScore based on how closely the company matches the ICP:\n\n9-10 = Core cold outreach or lead gen infrastructure (direct competitor to Smartlead, Clay, Instantly)\n7-8 = Adjacent tool used by cold outreach teams (enrichment, inbox management, sequence tools)\n5-6 = Partial fit — has outreach features but it's not the core product\n3-4 = Weak fit — B2B SaaS but outreach is a minor feature\n1-2 = Wrong category but still B2B SaaS\n0 = B2C or no clear product\n\n## OUTPUT FORMAT\nReturn ONLY a valid JSON object. No explanation outside the JSON.\n\n{\n  \"url\": \"the input URL\",\n  \"verdict\": \"QUALIFY or DISQUALIFY\",\n  \"score\": \"number 1-10\",\n  \"reason\": \"2-3 sentences. State exactly what the product does, which category it fits or fails, and the specific reason for your score. No vague language.\"\n}\n\n## RULES\n- If there is no content or an error, set verdict to DISQUALIFY, score to 0, reason to \"Website inaccessible or no product description found.\"\n- Do not infer or guess what a product does. Base judgment only on what the scraped website content returns.\n- Do not return anything outside the JSON object."
-      },
-      "delayBetweenRequests": {
-        "type": "integer",
-        "title": "Delay between requests (ms)",
-        "description": "Delay in milliseconds between processing each URL to avoid rate limiting",
-        "default": 2000,
-        "minimum": 0,
-        "maximum": 60000
-      },
-      "maxRetries": {
-        "type": "integer",
-        "title": "Max retries for AI calls",
-        "description": "Maximum number of retry attempts for AI calls in case of rate limiting",
-        "default": 3,
-        "minimum": 1,
-        "maximum": 10
-      }
+      "minItems": 1
     },
-    "required": ["urls", "openrouterApiKey"]
-  },
-  "storage": {
-    "datasets": {
-      "default": {
-        "description": "Qualification results for all processed URLs"
-      }
+    "openrouterApiKey": {
+      "type": "string",
+      "title": "OpenRouter API Key",
+      "description": "Your OpenRouter API key for AI analysis",
+      "isSecret": true
     }
   }
 }
